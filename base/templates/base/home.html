@@ -40,9 +40,39 @@
     function preview_image(event) {
         var reader = new FileReader();
         reader.onload = function(){
-            var output = document.getElementById('output-image')
-            output.src = reader.result;
-        }
+            var output = document.getElementById('output-image');
+            var img = new Image();
+
+            img.onload = function () {
+                // Set the maximum width and height for the preview image
+                var maxWidth = 300;
+                var maxHeight = 300;
+
+                // Calculate the new width and height while maintaining the aspect ratio
+                var width = img.width;
+                var height = img.height;
+                var newWidth, newHeight;
+                if (width > height) {
+                    newWidth = maxWidth;
+                    newHeight = Math.ceil(height * maxWidth / width);
+                } else {
+                    newHeight = maxHeight;
+                    newWidth = Math.ceil(width * maxHeight / height);
+                }
+
+                // Create a canvas element and resize the image
+                var canvas = document.createElement('canvas');
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+                // Set the resized image as the preview
+                output.src = canvas.toDataURL();
+            };
+
+            img.src = reader.result;
+        };
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
