@@ -3,3 +3,4 @@
 Django
 gradio_client
 gunicorn
+whitenoise[brotli]
